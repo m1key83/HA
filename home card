@@ -1,0 +1,201 @@
+type: custom:vertical-stack-in-card
+horizontal: false
+cards:
+  - type: custom:stack-in-card
+    cards:
+      - type: custom:mushroom-template-card
+        primary: Woonkamer
+        icon: mdi:sofa
+        icon_color: teal
+        layout: horizontal
+        entity: light.vloerlamp_light
+        secondary: >-
+          🌡️{{states('sensor.living_room_temperature') }}°C |
+          💧{{states('sensor.living_room_humidity') | int }}% |
+        tap_action:
+          action: navigate
+          navigation_path: /dashboard-home/subview-woonkamer
+        fill_container: true
+        multiline_secondary: false
+        card_mod:
+          style: |
+            ha-card {
+              z-index: 1;
+             }
+      - type: custom:mini-graph-card
+        entities:
+          - entity: sensor.living_room_temperature
+            name: Temperature
+          - entity: sensor.living_room_humidity
+            name: Humidity
+            color: blue
+            y_axis: secondary
+        color_thresholds:
+          - value: -20
+            color: '#264CFF'
+          - value: -15
+            color: '#3FA0FF'
+          - value: -10
+            color: '#72D8FF'
+          - value: -5
+            color: '#AAF7FF'
+          - value: 0
+            color: '#E0FFFF'
+          - value: 5
+            color: '#FFFFBF'
+          - value: 10
+            color: '#FFE099'
+          - value: 15
+            color: '#FFAD72'
+          - value: 20
+            color: '#F76D5E'
+          - value: 25
+            color: '#D82632'
+          - value: 30
+            color: '#A50021'
+        height: 50
+        hours_to_show: 24
+        line_width: 2
+        font_size: 50
+        animate: true
+        show:
+          name: false
+          icon: false
+          state: false
+          legend: false
+          fill: fade
+          labels: false
+          labels_secondary: false
+          points: false
+        card_mod:
+          style: |
+            ha-card {
+              position: absolute !important;
+              height: 100%;
+              width: 100%;
+              top: 0px;
+              --ha-card-border-width: 0;
+              }
+            ha-card:after {
+              content: "";
+              position: absolute;
+              width: 100%;
+              height: 100%;
+              background: linear-gradient(to right, var(--card-background-color) 20%, transparent);
+            }
+  - type: custom:vertical-stack-in-card
+    mode: vertical
+    cards:
+      - type: custom:vertical-stack-in-card
+        horizontal: true
+        cards:
+          - type: custom:mushroom-template-card
+            entity: light.camera_lamp
+            layout: vertical
+            icon: |-
+              {% if is_state('light.camera_lamp', 'on') %}
+              mdi:camera
+              {% else %}
+              mdi:camera
+              {% endif %}
+            icon_color: |-
+              {% if is_state('light.camera_lamp', 'on') %}
+                orange
+              {% endif %}
+          - type: custom:mushroom-template-card
+            entity: light.vloerlamp_light
+            layout: vertical
+            use_light_color: true
+            icon: |-
+              {% if is_state('light.vloerlamp_light', 'on') %}
+              mdi:floor-lamp
+              {% else %}
+              mdi:floor-lamp
+              {% endif %}
+            icon_color: |-
+              {% if is_state('light.vloerlamp_light', 'on') %}
+                orange
+              {% endif %}
+          - type: custom:mushroom-template-card
+            entity: switch.heater_woonkamer
+            layout: vertical
+            use_light_color: true
+            icon: |-
+              {% if is_state('switch.heater_woonkamer', 'on') %}
+              mdi:heat-wave
+              {% else %}
+              mdi:heat-wave
+              {% endif %}
+            icon_color: |-
+              {% if is_state('switch.heater_woonkamer', 'on') %}
+                orange
+              {% endif %}
+      - type: custom:vertical-stack-in-card
+        horizontal: true
+        cards:
+          - type: custom:mushroom-template-card
+            entity: light.traphal
+            layout: vertical
+            icon: |-
+              {% if is_state('light.traphal', 'on') %}
+              hue:ceiling-square
+              {% else %}
+              hue:ceiling-square
+              {% endif %}
+            icon_color: |-
+              {% if is_state('light.traphal', 'on') %}
+                orange
+              {% endif %}
+          - type: custom:mushroom-template-card
+            entity: light.led_strip_light
+            layout: vertical
+            use_light_color: true
+            icon: |-
+              {% if is_state('light.led_strip_light', 'on') %}
+              hue:lightstrip
+              {% else %}
+              hue:lightstrip
+              {% endif %}
+            icon_color: |-
+              {% if is_state('light.led_strip_light', 'on') %}
+                orange
+              {% endif %}
+          - type: custom:mushroom-template-card
+            entity: climate.living_room
+            tap_action:
+              action: toggle
+            layout: vertical
+            use_light_color: true
+            icon: >-
+              {% if is_state('remote.grote_tv', 'on') %} mdi:television {% else
+              %} mdi:television {% endif %}
+            icon_color: '{% if is_state(''remote.grote_tv'', ''on'') %} orange {% endif %}'
+      - type: custom:mushroom-chips-card
+        chips:
+          - type: template
+            icon: |-
+              {% if is_state(entity, 'playing') %}
+              mdi:television-play
+              {% elif is_state(entity, 'paused') %}
+              mdi:television-pause
+              {% elif is_state(entity, 'idle') %}
+              mdi:television
+              {% else %}
+              mdi:television
+              {% endif %}
+            icon_color: |2-
+                {% if is_state(entity, 'playing') %}
+                yellow
+                {% elif is_state(entity, 'paused') %}
+                yellow
+                {% elif is_state(entity, 'idle') %}
+                yellow
+                {% else %}
+                grey
+                {% endif %}
+            entity: media_player.grote_tv
+            content: '{{ state_attr(''media_player.grote_tv'', ''source'') }}'
+            tap_action:
+              action: more-info
+        alignment: end
+theme: Mushroom Square Shadow
